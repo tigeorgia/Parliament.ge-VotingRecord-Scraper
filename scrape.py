@@ -51,7 +51,7 @@ def bill_det (soup):
 
 
 def bill_number (soup):
-    regex = re.compile('^\w?\d\S*') # can't mach [-–], so using \S ??
+    regex = re.compile('^\s?\d\S*') # can't mach [-–], so using \S ??
     tags = not_in_hidethis(soup.findAll('td', attrs={'width':'50', 'align':'center'}))
     data = []
     for td in tags:
