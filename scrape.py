@@ -11,7 +11,7 @@ from BeautifulSoup import BeautifulSoup
 HOST = 'http://www.parliament.ge/'
 ROOT = HOST + 'index.php?sec_id=1530&lang_id=GEO&kan_name=&kan_num=&kan_mp=&Search=ძიება'
 #HOST = 'file:///home/shensche/votingrecord/Parliament.ge-VotingRecord-Scraper/'
-#ROOT = HOST + '880.html'
+#ROOT = HOST + 'first.html'
 NEXT_PAGE = HOST + 'index.php?lang_id=GEO&sec_id=1530&kan_name=&kan_num=&kan_mp=&Search=ძიება&limit='
 JSON_INDENT = 2
 OUTDIR = os.getcwd() + os.sep
@@ -40,13 +40,21 @@ def not_in_hidethis (tags):
     return data
 
 
+def get_kan_id (tag):
+    return tag.attrs[0][1].split('=')[-1]
+
+
 def bill_det (soup):
     regex = re.compile('kan_det=det')
     tags = not_in_hidethis(soup.findAll('a', attrs={'href':regex}))
 
     data = []
     for a in tags:
-        data.append({'link': a.attrs[0][1], 'name': a.contents[0].string})
+        data.append({
+            'link': a.attrs[0][1],
+            'name': a.contents[0].string,
+            'kan_id': get_kan_id(a)
+        })
     return data
 
 
@@ -95,6 +103,33 @@ def bill_result (soup):
     return data
 
 
+def bill_amendments (soup, det):
+    data = [[] for num in xrange(len(det))]
+    # each div contains a list of amendments
+    tags = soup.findAll('div', attrs={'class':'hidethis'})
+    for div in tags:
+        # find parent bill's index for this div's kan_id
+        bill = div.parent.parent.findPreviousSibling()
+        kan_id = get_kan_id(bill.find('td').find('a'))
+        for d in det:
+             if d['kan_id'] == kan_id:
+                idx = det.index(d)
+                break
+
+        # find amendment numbers
+        nums = []
+        for tr in div.findAll('tr'):
+            td = tr.findAll('td')
+            if len(td[1].contents) == 0:
+                nums.append(None)
+            else: # use bill number
+                nums.append(td[1].contents[0])
+        data[idx] = nums
+
+    return data
+
+
+
 def next_page (soup, is_root=False):
     regex = re.compile('limit=')
     tags = soup.findAll('a', attrs={'href':regex})
@@ -108,10 +143,11 @@ def next_page (soup, is_root=False):
     return NEXT_PAGE + limit.encode('utf-8')
 
 
+
 def write_record (data):
     global OUTDIR # might have been changed by opts
-    print 'Voting record for bill %s' % data['number']
-    out = OUTDIR + data['number'] + '.json'
+    print 'Voting record for bill %s, kan_id %s' % (data['number'], data['kan_id'])
+    out = OUTDIR + data['kan_id'] + '.json'
     fp = open(out, 'w')
     json.dump(data, fp, indent=JSON_INDENT)
     fp.close()
@@ -121,7 +157,7 @@ def page (soup):
     det = bill_det(soup)
     len_det = len(det)
     if len_det == 0:
-        print 'No bills found. Is this the right document?'
+        print 'WARNING: No bills found. Is this the right document?'
         return False
 
     number = bill_number(soup)
@@ -134,6 +170,11 @@ def page (soup):
     if len_date != len_det:
         raise ScrapeError('Number mismatch: bill date %d != bill det %d' % (len_date, len_det))
 
+    # fix the bill numbers if necessary
+    #for i in xrange(len(number)):
+    #    if not number[i]:
+    #        number[i] = date[i]
+
     result = bill_result(soup)
     len_result = len(result)
     if len_result != len_det:
@@ -141,17 +182,18 @@ def page (soup):
             result.append('')
         #raise ScrapeError('Number mismatch: bill result %d != bill det %d' % (len_result, len_det))
 
+    amendments = bill_amendments(soup, det)
+
     for i in xrange(len_det):
         record = {
+            'kan_id': det[i]['kan_id'],
             'link': HOST + det[i]['link'],
             'name': det[i]['name'],
+            'number': number[i],
             'date': date[i],
-            'result': result[i]
+            'result': result[i],
+            'amendments': amendments[i]
         }
-        if not number[i]:
-            record['number'] = date[i]
-        else:
-            record['number'] = number[i]
         write_record(record)
 
     return True
