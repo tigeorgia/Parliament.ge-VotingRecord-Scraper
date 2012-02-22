@@ -13,8 +13,9 @@ ROOT = HOST + 'index.php?sec_id=1530&lang_id=GEO&kan_name=&kan_num=&kan_mp=&Sear
 #HOST = 'file:///home/shensche/votingrecord/Parliament.ge-VotingRecord-Scraper/'
 #ROOT = HOST + 'first.html'
 NEXT_PAGE = HOST + 'index.php?lang_id=GEO&sec_id=1530&kan_name=&kan_num=&kan_mp=&Search=ძიება&limit='
-JSON_INDENT = 2
-OUTDIR = os.getcwd() + os.sep
+SLEEP = 1 # how long to wait between request
+JSON_INDENT = 2 # indentation for JSON output
+OUTDIR = os.getcwd() + os.sep # default output directory
 
 
 
@@ -99,7 +100,7 @@ def bill_result (soup):
             })
         fp.close()
         data.append(votes)
-        time.sleep(1) # give the server some time to breathe
+        time.sleep(SLEEP) # give the server some time to breathe
     return data
 
 
@@ -240,6 +241,7 @@ def main():
         time_start = time.time()
         nxt = scrape(nxt, is_root=False)
         print 'Took %d seconds.' % (time.time() - time_start)
+        time.sleep(SLEEP) # give the server some time to breathe
 
     print 'The whole scraping took %d seconds.' % (time.time() - time_start_global)
 
