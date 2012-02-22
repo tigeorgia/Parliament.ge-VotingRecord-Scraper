@@ -53,7 +53,7 @@ def bill_det (soup):
     for a in tags:
         data.append({
             'link': a.attrs[0][1],
-            'name': a.contents[0].string,
+            'name': a.contents[0].string.strip(),
             'kan_id': get_kan_id(a)
         })
     return data
