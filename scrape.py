@@ -64,10 +64,10 @@ def get_kan_id (tag):
 def bill_det (soup):
     """Find all det (? nomenclature of parliament.ge) on current page.
 
-    A det contains info about link to the actual bill, name and kan_id.
+    A det contains info about uri to the actual bill, name and kan_id.
 
     @param soup BeautifulSoup.BeautifulSoup
-    @return list of bill records: relative link, name, kan_id
+    @return list of bill records: relative uri, name, kan_id
     """
     regex = re.compile('kan_det=det')
     tags = not_in_hidethis(soup.findAll('a', attrs={'href':regex}))
@@ -75,7 +75,7 @@ def bill_det (soup):
     data = []
     for anchor in tags:
         data.append({
-            'link': anchor.attrs[0][1],
+            'uri': anchor.attrs[0][1],
             'name': anchor.contents[0].string.strip(),
             'kan_id': get_kan_id(anchor)
         })
@@ -255,7 +255,7 @@ def page (soup):
     for i in xrange(len_det):
         record = {
             'kan_id': det[i]['kan_id'],
-            'link': HOST + det[i]['link'],
+            'url': HOST + det[i]['uri'],
             'name': det[i]['name'],
             'number': number[i],
             'date': date[i],
