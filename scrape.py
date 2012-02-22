@@ -108,7 +108,7 @@ def next_page (soup, is_root=False):
     return NEXT_PAGE + limit.encode('utf-8')
 
 
-def write_bill (data):
+def write_record (data):
     global OUTDIR # might have been changed by opts
     print 'Voting record for bill %s' % data['number']
     out = OUTDIR + data['number'] + '.json'
@@ -142,17 +142,17 @@ def page (soup):
         #raise ScrapeError('Number mismatch: bill result %d != bill det %d' % (len_result, len_det))
 
     for i in xrange(len_det):
-        bill = {
+        record = {
             'link': HOST + det[i]['link'],
             'name': det[i]['name'],
             'date': date[i],
             'result': result[i]
         }
         if not number[i]:
-            bill['number'] = date[i]
+            record['number'] = date[i]
         else:
-            bill['number'] = number[i]
-        write_bill(bill)
+            record['number'] = number[i]
+        write_record(record)
 
     return True
 
