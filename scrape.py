@@ -248,7 +248,8 @@ class VotingRecordsScraper (object):
         for anchor in tags:
             handle = urllib2.urlopen(HOST + anchor.attrs[0][1])
             #handle = urllib2.urlopen(HOST + 'res.html')
-            result = BeautifulSoup(handle)
+            result = BeautifulSoup(
+                handle, convertEntities=BeautifulSoup.HTML_ENTITIES)
             table = result.find('table', attrs={
                 'width': '500',
                 'border':'0',
@@ -329,7 +330,8 @@ class VotingRecordsScraper (object):
         print 'Scraping: %s' % url
 
         handle = urllib2.urlopen(url)
-        soup = BeautifulSoup(handle)
+        soup = BeautifulSoup(
+            handle, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         details = self._scrape_details(soup)
         if details:
