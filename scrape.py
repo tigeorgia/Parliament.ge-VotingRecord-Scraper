@@ -190,7 +190,7 @@ class VotingRecordsScraper (object):
         num = len(data)
         if num != num_details:
             for _ in xrange(abs(num_details - num)): # fill with empty values
-                data.append('')
+                data.append(None)
 
         return data
 
