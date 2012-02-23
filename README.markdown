@@ -35,7 +35,7 @@ If something on parliament.ge changes, edit HOST, DOC, PARAMS and NEXT\_PAGE acc
 
 Usage
 -----
-$ python scrape.py --output=<outdir>
+$ python scrape.py --output=OUTDIR
 
 It outputs data in JSON format for each voting record (by kan\_id, some bills don't have a number) into the given <outdir>. The script will output status messages about each record being written and the time it took to scrape one page.
 
@@ -44,6 +44,7 @@ It outputs data in JSON format for each voting record (by kan\_id, some bills do
 Documentation
 -------------
 If you have epydoc and make installed, you can create the API documentation using
+
 $ make doc
 
 
