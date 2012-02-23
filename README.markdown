@@ -1,6 +1,13 @@
 Parliament.ge Voting Record Scraper
 ===================================
 
+Description
+-----------
+
+A tool to scrape voting records of passed / draf bills from [Georgia's parliament website](http://parliament.ge "parliament.ge"). The results are placed into JSON files for each individual bill.
+
+
+
 Requirements
 ------------
 
@@ -24,6 +31,7 @@ You should be able to run the scraper as is.
 If something on parliament.ge changes, edit HOST, DOC, PARAMS and NEXT\_PAGE accordingly.
 
 
+
 Usage
 -----
 $ python scrape.py --output=<outdir>
@@ -31,10 +39,12 @@ $ python scrape.py --output=<outdir>
 It outputs data in JSON format for each voting record (by kan\_id, some bills don't have a number) into the given <outdir>. The script will output status messages about each record being written and the time it took to scrape one page.
 
 
+
 Documentation
 -------------
-Create API documentation using
+If you have epydoc and make installed, you can create the API documentation using
 $ make doc
+
 
 
 Enjoy.
