@@ -4,7 +4,7 @@ Parliament.ge Voting Record Scraper
 Description
 -----------
 
-A tool to scrape voting records of passed / draf bills from [Georgia's parliament website](http://parliament.ge "parliament.ge"). The results are placed into JSON files for each individual bill.
+A tool to scrape voting records of passed / draf bills from [Georgia's parliament website](http://www.parliament.ge "www.parliament.ge"). The results are placed into JSON files for each individual bill.
 
 
 
@@ -19,6 +19,7 @@ Requirements
   or
   $ sudo pip install BeautifulSoup
 
+Optional:
 - [epydoc](http://epydoc.sourceforge.net/ "epydoc")
 - [make](http://www.gnu.org/software/make/ "make")
   If you want to generate API documentation.
