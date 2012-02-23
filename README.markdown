@@ -4,12 +4,18 @@ Parliament.ge Voting Record Scraper
 Requirements
 ------------
 
-- [Python](http://python.org "Python") (2.7, but older and newer versions might work)
-- [BeautifulSoup](http://www.crummy.com/software/BeautifulSoup/ "Beautiful Soup")
+- [Python](http://python.org "Python") 2.7
+  But older and newer versions might work.
+- [BeautifulSoup](http://www.crummy.com/software/BeautifulSoup/ "Beautiful Soup") 3.2.0
   To install, e.g.:
   $ sudo apt-get install python-beautifulsoup
   or
   $ sudo pip install BeautifulSoup
+
+- [epydoc](http://epydoc.sourceforge.net/ "epydoc")
+- [make](http://www.gnu.org/software/make/ "make")
+  If you want to generate API documentation.
+
 
 
 Configuration
@@ -24,6 +30,11 @@ $ python scrape.py --output=<outdir>
 
 It outputs data in JSON format for each voting record (by kan\_id, some bills don't have a number) into the given <outdir>. The script will output status messages about each record being written and the time it took to scrape one page.
 
+
+Documentation
+-------------
+Create API documentation using
+$ make doc
 
 
 Enjoy.
